@@ -14,19 +14,21 @@
 (function() {
 	'use strict';
 	// These selectors are a little janky but that's what you get when class names have auto-generated suffixes.
-	const qryPanels = `div[class^="sidebar-"] section[class^="panels"]`;
-	const qryIsInVC = `${qryPanels} div[class^="rtcConnectionStatus"]`;
-	const qryIsSpeaking = `${qryPanels} div[class^="avatarWrapper"] div[class^="avatarSpeaking"]`;
-	const qryIsMuted = `${qryPanels} div[class^="avatarWrapper"] + div > button[role="switch"]:nth-child(1)[aria-checked="true"]`;
-	const qryIsDeafened = `${qryPanels} div[class^="avatarWrapper"] + div > button[role="switch"]:nth-child(2)[aria-checked="true"]`;
+	const qryPanels = `div[class*="sidebar"] section[class*="panels"]`;
+	const qryIsInVC = `${qryPanels} div[class*="containerRtcOpened"]`;
+	const qryIsSpeaking = `${qryPanels} div[class*="avatarWrapper"] div[class*="avatarBorder"]`;
+	const qryIsMuted = `${qryPanels} div[class*="avatarWrapper"] + div > button[role="switch"]:nth-child(1)[aria-checked="true"]`;
+	const qryIsDeafened = `${qryPanels} div[class*="avatarWrapper"] + div > button[role="switch"]:nth-child(2)[aria-checked="true"]`;
 
 	// Discord hijacks XMLHttpRequest to also log to Sentry so we gotta store copies:
 	const _XMLHttpRequest = XMLHttpRequest;
 	const _XMLHttpRequest_open = _XMLHttpRequest.prototype.open;
 	const _XMLHttpRequest_send = _XMLHttpRequest.prototype.send;
-
+	
+	const _console = console;
+	const _console_info = console.info;
 	function send(status) {
-		//console.info("sending status:", status);
+		//_console_info.call(_console, status);
 		const xhr = new _XMLHttpRequest();
 		xhr.open = _XMLHttpRequest_open;
 		xhr.send = _XMLHttpRequest_send;
@@ -36,7 +38,7 @@
 	
 	const _querySelector = document.querySelector;
 	const check = (qry) => _querySelector.call(document, qry);
-
+	
 	let oldStatus = null;
 	const rxHasUnreads = /^\(\d+/g;
 	setInterval(() => {
