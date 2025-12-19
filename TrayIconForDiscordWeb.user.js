@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Discord Tray Icon
 // @namespace    https://yal.cc
-// @version      1.0
+// @version      1.1
 // @description  Gives the web version of Discord client a tray icon akin to native
 // @author       YellowAfterlife
 // @match        https://discord.com/channels/*
@@ -40,7 +40,7 @@
 	const check = (qry) => _querySelector.call(document, qry);
 	
 	let oldStatus = null;
-	const rxHasUnreads = /^\(\d+/g;
+	const rxHasUnreads = /^\(\d+/;
 	setInterval(() => {
 		let status;
 		if (check(qryIsInVC)) {
